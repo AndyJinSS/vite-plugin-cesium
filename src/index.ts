@@ -13,7 +13,7 @@ interface VitePluginCesiumOptions {
   cesiumBuildRootPath?: string;
   cesiumBuildPath?: string;
   cesiumBaseUrl?: string;
-  enableBase?: boolean;
+  enableBaseInOutDir?: boolean;
 }
 
 export default function vitePluginCesium(options: VitePluginCesiumOptions = {}): Plugin {
@@ -23,7 +23,7 @@ export default function vitePluginCesium(options: VitePluginCesiumOptions = {}):
     cesiumBuildRootPath = 'node_modules/cesium/Build',
     cesiumBuildPath = 'node_modules/cesium/Build/Cesium/',
     cesiumBaseUrl = 'cesium/',
-    enableBase =  true,
+    enableBaseInOutDir =  true,
   } = options;
 
   let CESIUM_BASE_URL = cesiumBaseUrl;
@@ -39,7 +39,7 @@ export default function vitePluginCesium(options: VitePluginCesiumOptions = {}):
 
     config(c, { command }) {
       isBuild = command === 'build';
-      if (enableBase && c.base !== undefined) {
+      if (c.base !== undefined) {
         base = c.base;
         if (base === '') base = './';
       }
@@ -91,12 +91,13 @@ export default function vitePluginCesium(options: VitePluginCesiumOptions = {}):
     async closeBundle() {
       if (isBuild) {
         try {
-          await fs.copy(path.join(cesiumBuildPath, 'Assets'), path.join(outDir, CESIUM_BASE_URL, 'Assets'));
-          await fs.copy(path.join(cesiumBuildPath, 'ThirdParty'), path.join(outDir, CESIUM_BASE_URL, 'ThirdParty'));
-          await fs.copy(path.join(cesiumBuildPath, 'Workers'), path.join(outDir, CESIUM_BASE_URL, 'Workers'));
-          await fs.copy(path.join(cesiumBuildPath, 'Widgets'), path.join(outDir, CESIUM_BASE_URL, 'Widgets'));
+          const cesiumBaseUrl = enableBaseInOutDir ? CESIUM_BASE_URL : './'
+          await fs.copy(path.join(cesiumBuildPath, 'Assets'), path.join(outDir, cesiumBaseUrl, 'Assets'));
+          await fs.copy(path.join(cesiumBuildPath, 'ThirdParty'), path.join(outDir, cesiumBaseUrl, 'ThirdParty'));
+          await fs.copy(path.join(cesiumBuildPath, 'Workers'), path.join(outDir, cesiumBaseUrl, 'Workers'));
+          await fs.copy(path.join(cesiumBuildPath, 'Widgets'), path.join(outDir, cesiumBaseUrl ,'Widgets'));
           if (!rebuildCesium) {
-            await fs.copy(path.join(cesiumBuildPath, 'Cesium.js'), path.join(outDir, CESIUM_BASE_URL, 'Cesium.js'));
+            await fs.copy(path.join(cesiumBuildPath, 'Cesium.js'), path.join(outDir, cesiumBaseUrl, 'Cesium.js'));
           }
         } catch (err) {
           console.error('copy failed', err);
