@@ -13,6 +13,7 @@ interface VitePluginCesiumOptions {
   cesiumBuildRootPath?: string;
   cesiumBuildPath?: string;
   cesiumBaseUrl?: string;
+  enableBase?: boolean;
 }
 
 export default function vitePluginCesium(options: VitePluginCesiumOptions = {}): Plugin {
@@ -21,7 +22,8 @@ export default function vitePluginCesium(options: VitePluginCesiumOptions = {}):
     devMinifyCesium = false,
     cesiumBuildRootPath = 'node_modules/cesium/Build',
     cesiumBuildPath = 'node_modules/cesium/Build/Cesium/',
-    cesiumBaseUrl = 'cesium/'
+    cesiumBaseUrl = 'cesium/',
+    enableBase =  true,
   } = options;
 
   let CESIUM_BASE_URL = cesiumBaseUrl;
@@ -37,7 +39,7 @@ export default function vitePluginCesium(options: VitePluginCesiumOptions = {}):
 
     config(c, { command }) {
       isBuild = command === 'build';
-      if (c.base !== undefined) {
+      if (enableBase && c.base !== undefined) {
         base = c.base;
         if (base === '') base = './';
       }

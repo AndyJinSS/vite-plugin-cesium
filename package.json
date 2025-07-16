@@ -1,5 +1,5 @@
 {
-  "name": "vite-plugin-cesium",
+  "name": "vite-plugin-cesium-andy",
   "version": "1.2.23",
   "description": "Cesium library plugin for Vite",
   "main": "./dist/index.js",
