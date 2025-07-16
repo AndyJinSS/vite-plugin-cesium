@@ -91,7 +91,7 @@ export default function vitePluginCesium(options: VitePluginCesiumOptions = {}):
     async closeBundle() {
       if (isBuild) {
         try {
-          const cesiumBaseUrl = enableBaseInOutDir ? CESIUM_BASE_URL : './'
+          const cesiumBaseUrl = enableBaseInOutDir ? CESIUM_BASE_URL : 'cesium/'
           await fs.copy(path.join(cesiumBuildPath, 'Assets'), path.join(outDir, cesiumBaseUrl, 'Assets'));
           await fs.copy(path.join(cesiumBuildPath, 'ThirdParty'), path.join(outDir, cesiumBaseUrl, 'ThirdParty'));
           await fs.copy(path.join(cesiumBuildPath, 'Workers'), path.join(outDir, cesiumBaseUrl, 'Workers'));
